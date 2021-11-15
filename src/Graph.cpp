@@ -4,12 +4,23 @@
 #include <unordered_map>
 #include <utility>
 
-Graph(const std::vector<std::pair<int,std::vector<int>>>& inTable) {
-    for (const std::pair<int,std::vector<int>>& row : inTable) {
-        const int& movieID = row.first;
-        const std::vector<int>& actorIDs = row.second;
-        for (const int& fromActorID : actorIDs) {
-            for (const int& toActorID : actorIDs) {
+Graph::Graph(const std::vector<std::vector<int>>& inTable) {
+    for (const std::vector<int>& row : inTable) {
+        for (const int& fromActorID : row) {
+            for (const int& toActorID : row) {
+                if (fromActorID != toActorID) {
+                    this->insertEdge(fromActorID, toActorID, 
+                    this->getWeight(fromActorID, toActorID) + 1);
+                }
+            }
+        } 
+    }
+}
+
+void Graph::buildGraph(const std::vector<std::vector<int>>& inTable) {
+    for (const std::vector<int>& row : inTable) {
+        for (const int& fromActorID : row) {
+            for (const int& toActorID : row) {
                 if (fromActorID != toActorID) {
                     this->insertEdge(fromActorID, toActorID, 
                     this->getWeight(fromActorID, toActorID) + 1);
@@ -55,21 +66,21 @@ std::vector<int> Graph::getAdjacent(int vertex) {
     // check if 'vertex' exists before accessing adjacent vertices
     if (V.find(vertex) != V.end()) {
         // append every adjacent vertex
-        for (const std::pair<int,float>& value : G[vertex]) {
+        for (const std::pair<int,float>& value : G[V[vertex]]) {
             adjacents.push_back(value.first);
         }
     }
     return adjacents;
 }
 
-void invertWeights() {
+void Graph::invertWeights() {
     for (std::unordered_map<int,float>& adjacents : G) {
-        for (std::pair<int,float>& value : adjacents) {
+        for (std::pair<const int,float>& value : adjacents) {
             value.second = 1/value.second;
         }
     }
 }
 
-int getNumVertices() {
+int Graph::getNumVertices() {
     return numVertices;
 }
