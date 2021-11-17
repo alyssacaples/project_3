@@ -7,8 +7,11 @@
 
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
+class ActorAnalyzer;
 class Graph {
+    friend ActorAnalyzer;
     private:
         std::unordered_map<int,int> V;
         std::vector<std::unordered_map<int,float>> G;
@@ -55,6 +58,13 @@ class Graph {
 
         // returns numVertices
         int getNumVertices();
+
+        // determines if all the vertices in the graph are connected
+        bool isConnected();
+
+        // returns a vector<int> describing the shortest unweighted
+        // path from -> to. If no path exists, returns {}
+        std::vector<int> bfs(int from, int to);
 };
 
 #endif /* GRAPH_H_GUARD */
