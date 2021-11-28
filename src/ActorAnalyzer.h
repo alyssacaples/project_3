@@ -26,10 +26,10 @@ class ActorAnalyzer {
         std::unordered_map<int,Movie> movies;
         std::unordered_map<int,Actor> actors;
     public:
-        ActorAnalyzer() = default;
+        ActorAnalyzer() = delete;
         ActorAnalyzer(const std::string filename);
         std::string PrintMovies(int actorID);
-        int DegreesOfSeperatiom(int from, int to);
+        int DegreesOfSeperation(int from, int to);
         bool isConnected();
 };
 

@@ -7,12 +7,17 @@
 #include "ActorAnalyzer.h"
 
 int main() {
-    ActorAnalyzer AA("movies_id.csv");
-    
     auto start = std::chrono::system_clock::now();
-    std::cout << AA.DegreesOfSeperatiom(31,-1) << std::endl; // should print "-1"
+    ActorAnalyzer AA("../movies_id.csv");
     auto stop = std::chrono::system_clock::now();
+    std::cout << "Time to construct ActorAnalyzer: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count() << " ms" << std::endl;
+
+    start = std::chrono::system_clock::now();
+    std::cout << AA.DegreesOfSeperation(31,-1) << std::endl; // should print "-1"
+    stop = std::chrono::system_clock::now();
     std::cout << "Time to run bfs: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count() << " ms" << std::endl;
+
+    AA.PrintMovies(31);
 
     start = std::chrono::system_clock::now();
     std::cout << (AA.isConnected() ? "connected" : "not connected") << std::endl;
