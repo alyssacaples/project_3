@@ -29,8 +29,9 @@ class ActorAnalyzer {
         ActorAnalyzer() = delete;
         ActorAnalyzer(const std::string filename);
         std::string PrintMovies(int actorID);
-        int DegreesOfSeperation(int from, int to);
+        int DegreesOfSeparation(int from, int to);
         bool isConnected();
+        std::vector<int> dijkstra(int from, int to);
 };
 
 #endif /* ACTORANALYZER_H_GUARD */

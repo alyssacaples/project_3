@@ -6,6 +6,7 @@
 #include <unordered_set>
 #include <queue>
 #include <utility>
+#include <limits>
 
 Graph::Graph(const std::vector<std::vector<int>>& inTable) {
     for (const std::vector<int>& row : inTable) {
@@ -91,6 +92,8 @@ int Graph::getNumVertices() {
 bool Graph::isConnected() {
     std::unordered_set<int> visited;
     std::queue<int> q;
+    // verify that the graph is not empty
+    if (V.begin() == V.end()) return false;
     int source = V.begin()->first;
     q.push(source);
     visited.insert(source);
@@ -110,6 +113,8 @@ bool Graph::isConnected() {
 }
 
 std::vector<int> Graph::bfs(int from, int to) {
+    if (from == to) return {from};
+
     std::unordered_set<int> visited;
     std::unordered_map<int,int> parents;
     std::queue<int> q;
@@ -139,11 +144,63 @@ std::vector<int> Graph::bfs(int from, int to) {
     // construct the path from parents
     std::vector<int> path;
     int currVert = to;
-    while (1) {
+    while (parents.find(currVert) != parents.end()) {
         path.push_back(currVert);
-        currVert = parents[to];
-        if (currVert == from) break;
+        currVert = parents[currVert];
+    }
+    path.push_back(currVert);
+    std::reverse(path.begin(), path.end());
+    return path;
+}
+
+std::vector<int> Graph::dijkstra(int from, int to) {
+    if (from == to) return {from};
+    
+    std::vector<bool> visited(numVertices,false);
+    std::vector<int> parents(numVertices,-1);
+    std::vector<float> cost(numVertices, std::numeric_limits<float>::infinity());
+    bool toFound = false;
+
+    // pair::first is the cost, pair::second is the vertex
+    std::priority_queue<std::pair<int,int>, std::vector<std::pair<int,int>>, std::greater<std::pair<int,int>>> pq;
+
+    cost[V[from]] = 0;
+    pq.push(std::make_pair(0,from));
+
+    while(!pq.empty()) {
+        std::pair<int,int> vertex = pq.top(); pq.pop();
+        // check if the cost of the vertex has been relaxed before continuing
+        if (cost[V[vertex.second]] < vertex.first) continue; // this element in the pq is "invalid"
+        visited[V[vertex.second]] = true;
+        // early stopping condition once we process the to vertex
+        if (vertex.second == to) break;
+        int baseCost = cost[V[vertex.second]];
+        const std::vector<int> adj = getAdjacent(vertex.second);
+        for (const int v : adj) {
+            // "relax" every adjacent vertex v that has not been visited
+            if (!visited[V[v]] && baseCost + getWeight(vertex.second, v) < cost[V[v]]) {
+                cost[V[v]] = baseCost + getWeight(vertex.second, v);
+                parents[V[v]] = vertex.second;
+                pq.push(std::make_pair(cost[V[v]], v));
+                if (v == to) {
+                    toFound = true;
+                }
+            }
+        }
+    }
+    if (!toFound) return {};
+
+    // construct the path from parents
+    std::vector<int> path;
+    int currVert = to;
+    while (currVert != -1) {
+        path.push_back(currVert);
+        currVert = parents[V[currVert]];
     }
     std::reverse(path.begin(), path.end());
     return path;
+}
+
+std::vector<int> Graph::a_star(int from, int to) {
+    return {};
 }

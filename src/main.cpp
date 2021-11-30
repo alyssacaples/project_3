@@ -13,16 +13,23 @@ int main() {
     std::cout << "Time to construct ActorAnalyzer: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count() << " ms" << std::endl;
 
     start = std::chrono::system_clock::now();
-    std::cout << AA.DegreesOfSeperation(31,-1) << std::endl; // should print "-1"
+    std::cout << AA.DegreesOfSeparation(31,777) << std::endl; // should print "1"
     stop = std::chrono::system_clock::now();
     std::cout << "Time to run bfs: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count() << " ms" << std::endl;
 
-    AA.PrintMovies(31);
+    std::cout << AA.PrintMovies(31) << std::endl;
 
     start = std::chrono::system_clock::now();
     std::cout << (AA.isConnected() ? "connected" : "not connected") << std::endl;
     stop = std::chrono::system_clock::now();
     std::cout << "Time to run isConnected: " << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count() << " ms" << std::endl;
+
+    start = std::chrono::system_clock::now();
+    std::vector<int> path = AA.dijkstra(31, 777);
+    for (int vertex : path) std::cout << vertex << ' ';
+    std::cout << std::endl;
+    stop = std::chrono::system_clock::now();
+    std::cout << "Time to run dijkstra(31, 777): " << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count() << " ms" << std::endl;
 
     return 0;
 }

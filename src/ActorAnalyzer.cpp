@@ -30,16 +30,16 @@ std::string ActorAnalyzer::PrintMovies(int actorID) {
     const std::vector<int>& movies = actors[actorID].movies;
     std::string movieList;
     for (int movie : movies) {
-        movieList.append('"' + this->movies[movie].name + '"' + ',');
+        movieList.append('<' + this->movies[movie].name + '>' + ',');
     }
     if (!movieList.empty()) movieList.pop_back(); // eliminate extra ','
     return movieList;
 }
 
-int ActorAnalyzer::DegreesOfSeperation(int from, int to) {
+int ActorAnalyzer::DegreesOfSeparation(int from, int to) {
     std::vector<int> path = graph.bfs(from, to);
     if (path.size() == 0 && from != to) return -1; // path does not exist!!!
-    return path.size();
+    return path.size() - 1;
 }
 
 inline static void parseLine (
@@ -122,4 +122,8 @@ inline static void parseLine (
 
 bool ActorAnalyzer::isConnected() {
     return graph.isConnected();
+}
+
+std::vector<int> ActorAnalyzer::dijkstra(int from, int to) {
+    return graph.dijkstra(from, to);
 }
