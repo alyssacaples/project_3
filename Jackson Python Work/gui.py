@@ -18,11 +18,13 @@ class Graph:
     - empty adjacency list
     - blank graph object
     - no colors
+    - name-ID map [ID --> name]
     '''
     def __init__(self):
         self.graph = {  }
         self.G = nx.Graph()
         self.colors = [ ]
+        self.name_ID_map = { }
     
     '''
     insert
@@ -113,22 +115,33 @@ class Graph:
             lines = [line.rstrip().split(',') for line in f.readlines()]
         for line in lines:
             if line[0] == 'D':
-                path = [(line[i], line[i+1]) for i in range(1, len(line)-1)]
-                print(path)
+                path = [(self.name_ID_map[line[i]], self.name_ID_map[line[i+1]]) for i in range(1, len(line)-1)]
                 self.highlight_path(path, 'r')
             elif line[0] == 'A':
-                path = [(line[i], line[i+1]) for i in range(1, len(line)-1)]
-                print(path)
+                path = [(self.name_ID_map[line[i]], self.name_ID_map[line[i+1]]) for i in range(1, len(line)-1)]
                 self.highlight_path(path, 'g')
             else:
                 for i in range(1, len(line)-1, 2):
-                    self.insert(line[0], line[i], line[i+1])
+                    self.insert(self.name_ID_map[line[0]], self.name_ID_map[line[i]], line[i+1])
+
+    '''
+    create_ID_name_map
+    Parameters: a filename
+    Returns: None
+    Description: given a file 'filename' create the ID->name map
+    '''
+    def create_ID_name_map(self, filename):
+        with open(filename, 'r') as f:
+            lines = [line.rstrip().split(',') for line in f.readlines()]
+        for line in lines:
+                self.name_ID_map[line[0]] = line[1]     
 
 def main():
 
     my_graph = Graph()
 
-    my_graph.parse_file("test.txt")
+    my_graph.create_ID_name_map("../output/actors.txt")
+    my_graph.parse_file("../output/adjList.txt")
 
     my_graph.draw()
 
