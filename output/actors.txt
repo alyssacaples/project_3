@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 777,Judge Reinhold
 776,Eddie Murphy
 4,Carrie Fisher
@@ -5,3 +6,8 @@
 591,Brion James
 3,Harrison Ford
 585,Rutger Hauer
+=======
+1,a
+2,b
+3,c
+>>>>>>> c2fb13514865dbc5559e0d8d9d653039675bff07

@@ -1,5 +1,4 @@
-jackson,ben,0.9
-ben,alyssa,0.5
-alyssa,jackson,0.1
-D,jackson,ben
-A,jackson,alyssa
+1,2,0.9,3,0.5
+2,3,1.2
+D,1,2
+A,2,3
