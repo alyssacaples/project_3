@@ -1,7 +1,10 @@
 #include "ActorAnalyzer.h"
 
+#include <sstream>
 #include <fstream>
 #include <unordered_map>
+#include <unordered_set>
+#include <queue>
 #include <vector>
 #include <string>
 
@@ -126,4 +129,92 @@ bool ActorAnalyzer::isConnected() {
 
 std::vector<int> ActorAnalyzer::dijkstra(int from, int to) {
     return graph.dijkstra(from, to);
+}
+
+std::unordered_set<int> ActorAnalyzer::kSurrondingNodes(const std::vector<int>& path, int k) {
+    // need a master list to store the output
+    std::unordered_set<int> masterVisited;
+    
+    for (int src : path) {
+        // we don't want to track visited nodes across different soures
+        // because we want to see all the nodes within a distance of k
+        // from EVERY source
+        std::unordered_set<int> visited;
+        visited.insert(src);
+        std::queue<std::pair<int,int>> q;
+
+        q.push(std::make_pair(src, 0));
+
+        while(!q.empty()) {
+            std::pair<int,int> node = q.front(); q.pop();
+            int vertex = node.first;
+            int dist = node.second;
+            visited.insert(vertex);
+            // don't expand more than k nodes past the source
+            if (dist == k) continue;
+            
+            for (int adj : graph.getAdjacent(vertex)) {
+                if (visited.find(adj) == visited.end()) {
+                    visited.insert(adj);
+                    q.push(std::make_pair(adj, dist+1));
+                }
+            }
+        }
+
+        for (int v : visited) masterVisited.insert(v);
+    }
+    return masterVisited;
+}
+
+// https://stackoverflow.com/questions/16605967/set-precision-of-stdto-string-when-converting-floating-point-values
+template <typename T>
+std::string to_string_with_precision(const T a_value, const int n = 6)
+{
+    std::ostringstream out;
+    out.precision(n);
+    out << std::fixed << a_value;
+    return out.str();
+}
+
+std::string ActorAnalyzer::PrintAdjacencyList(const std::unordered_set<int>& nodes) {
+    std::string output;
+    for (int node : nodes) {
+        std::string line = "";
+        line.append(std::to_string(node));
+        for (int adj : graph.getAdjacent(node)) {
+            if (nodes.find(adj) != nodes.end()) {
+                line.push_back(',');
+                line.append(std::to_string(adj));
+                line.push_back(',');
+                line.append(to_string_with_precision((graph.getWeight(node, adj)), 3));
+            }
+        }
+        line.push_back('\n');
+        output.append(line);
+    }
+    return output;
+}
+
+std::string ActorAnalyzer::PrintActors(const std::unordered_set<int>& nodes) {
+    std::string output;
+    for (int node : nodes) {
+        std::string line = "";
+        line.append(std::to_string(node));
+        line.push_back(',');
+        line.append(actors[node].name);
+        line.push_back('\n');
+        output.append(line);
+    }
+    return output;
+}
+
+std::string ActorAnalyzer::PrintPath(const std::vector<int>& path) {
+    std::string output;
+    for (int vertex : path) {
+        output.append(std::to_string(vertex));
+        output.push_back(',');
+    }
+    output.pop_back(); // eliminate trailing ','
+    output.push_back('\n');
+    return output;
 }

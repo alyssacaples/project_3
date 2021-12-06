@@ -7,6 +7,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 #include "Graph.h"
@@ -32,6 +33,10 @@ class ActorAnalyzer {
         int DegreesOfSeparation(int from, int to);
         bool isConnected();
         std::vector<int> dijkstra(int from, int to);
+        std::unordered_set<int> kSurrondingNodes(const std::vector<int>& path, int k);
+        std::string PrintAdjacencyList(const std::unordered_set<int>& nodes);
+        std::string PrintActors(const std::unordered_set<int>& nodes);
+        std::string PrintPath(const std::vector<int>& path);
 };
 
 #endif /* ACTORANALYZER_H_GUARD */
