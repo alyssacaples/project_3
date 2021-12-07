@@ -9,7 +9,9 @@ Graph Class
 Data Members:
 - graph adjacency list (self.graph)
 - networkx graph object (self.G)
-- a list of edge colors (self.colors)
+- a list of edge colors (self.edge_colors)
+- a list of node colors (self.node_colors)
+- a map of IDs to names
 '''
 class Graph:
 
@@ -23,7 +25,8 @@ class Graph:
     def __init__(self):
         self.graph = {  }
         self.G = nx.Graph()
-        self.colors = [ ]
+        self.edge_colors = [ ]
+        self.node_colors = [ ]
         self.name_ID_map = { }
     
     '''
@@ -50,7 +53,8 @@ class Graph:
         self.graph[n1].append( (n2, weight) )
         self.graph[n2].append( (n1, weight) )
         self.G.add_edge(n1, n2, weight=weight)
-        self.colors = ['b' for u,v in self.G.edges()]
+        self.edge_colors = ['b' for u,v in self.G.edges()]
+        self.node_colors = ['b' for p in self.G.nodes()]
 
     '''
     highlight_path
@@ -72,7 +76,20 @@ class Graph:
         i = 0
         for u,v in self.G.edges():
             if (edge_pair[0] == u and edge_pair[1] == v) or (edge_pair[1] == u and edge_pair[0] == v):
-                self.colors[i] = color
+                self.edge_colors[i] = color
+            i += 1
+
+    '''
+    change_node_color
+    Parameters: a string representing the node name and a color to make it
+    Returns: None
+    Description: given a node in the graph, change its color
+    '''
+    def change_node_color(self, node, color):
+        i = 0
+        for p in self.G.nodes():
+            if p == node:
+                self.node_colors[i] = color
             i += 1
         
     '''
@@ -99,7 +116,7 @@ class Graph:
     '''
     def draw(self):
         pos = nx.shell_layout(self.G)
-        nx.draw(self.G, pos, edge_color=self.colors, with_labels=True)
+        nx.draw(self.G, pos, edge_color=self.edge_colors, node_color=self.node_colors, with_labels=True)
         labels = nx.get_edge_attributes(self.G,'weight')
         nx.draw_networkx_edge_labels(self.G,pos, edge_labels=labels)
         plt.show()
@@ -141,6 +158,8 @@ class Graph:
         for line in lines:
             path = [(self.name_ID_map[line[i]], self.name_ID_map[line[i+1]]) for i in range(0, len(line)-1)]
             self.highlight_path(path, 'r')
+        self.change_node_color(self.name_ID_map[line[0]], 'r')
+        self.change_node_color(self.name_ID_map[line[len(line)-1]], 'r')
 
 def main():
 

@@ -14,9 +14,9 @@ int main() {
     << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count()
     << " ms" << std::endl;
 
-    std::vector<int> path = AA.dijkstra(31, 777);
+    std::vector<int> path = AA.dijkstra(31, 2963);
 
-    std::unordered_set<int> nodes = AA.kSurrondingNodes(path, 1, 10);
+    std::unordered_set<int> nodes = AA.kSurrondingNodes(path, 1, 0);
 
     std::ofstream adjList("../output/adjList.txt");
     std::ofstream actors("../output/actors.txt");
