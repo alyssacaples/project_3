@@ -16,7 +16,7 @@ int main() {
 
     std::vector<int> path = AA.dijkstra(31, 777);
 
-    std::unordered_set<int> nodes = AA.kSurrondingNodes(path, 0);
+    std::unordered_set<int> nodes = AA.kSurrondingNodes(path, 1, 10);
 
     std::ofstream adjList("../output/adjList.txt");
     std::ofstream actors("../output/actors.txt");

@@ -33,7 +33,7 @@ class ActorAnalyzer {
         int DegreesOfSeparation(int from, int to);
         bool isConnected();
         std::vector<int> dijkstra(int from, int to);
-        std::unordered_set<int> kSurrondingNodes(const std::vector<int>& path, int k);
+        std::unordered_set<int> kSurrondingNodes(const std::vector<int>& path, int k, int nodeLimit);
         std::string PrintAdjacencyList(const std::unordered_set<int>& nodes);
         std::string PrintActors(const std::unordered_set<int>& nodes);
         std::string PrintPath(const std::vector<int>& path);

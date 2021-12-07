@@ -131,7 +131,7 @@ std::vector<int> ActorAnalyzer::dijkstra(int from, int to) {
     return graph.dijkstra(from, to);
 }
 
-std::unordered_set<int> ActorAnalyzer::kSurrondingNodes(const std::vector<int>& path, int k) {
+std::unordered_set<int> ActorAnalyzer::kSurrondingNodes(const std::vector<int>& path, int k, int nodeLimit) {
     // need a master list to store the output
     std::unordered_set<int> masterVisited;
     
@@ -143,21 +143,27 @@ std::unordered_set<int> ActorAnalyzer::kSurrondingNodes(const std::vector<int>& 
         visited.insert(src);
         std::queue<std::pair<int,int>> q;
 
+        int count = 0;
+
         q.push(std::make_pair(src, 0));
 
-        while(!q.empty()) {
+        while(!q.empty() && count < nodeLimit && count < nodeLimit) {
             std::pair<int,int> node = q.front(); q.pop();
             int vertex = node.first;
             int dist = node.second;
             visited.insert(vertex);
+            count++;
+            
             // don't expand more than k nodes past the source
             if (dist == k) continue;
             
             for (int adj : graph.getAdjacent(vertex)) {
                 if (visited.find(adj) == visited.end()) {
                     visited.insert(adj);
+                    count++;
                     q.push(std::make_pair(adj, dist+1));
                 }
+                if (count >= nodeLimit) break;
             }
         }
 
