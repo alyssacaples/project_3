@@ -114,15 +114,8 @@ class Graph:
         with open(filename, 'r') as f:
             lines = [line.rstrip().split(',') for line in f.readlines()]
         for line in lines:
-            if line[0] == 'D':
-                path = [(self.name_ID_map[line[i]], self.name_ID_map[line[i+1]]) for i in range(1, len(line)-1)]
-                self.highlight_path(path, 'r')
-            elif line[0] == 'A':
-                path = [(self.name_ID_map[line[i]], self.name_ID_map[line[i+1]]) for i in range(1, len(line)-1)]
-                self.highlight_path(path, 'g')
-            else:
-                for i in range(1, len(line)-1, 2):
-                    self.insert(self.name_ID_map[line[0]], self.name_ID_map[line[i]], line[i+1])
+            for i in range(1, len(line)-1, 2):
+                self.insert(self.name_ID_map[line[0]], self.name_ID_map[line[i]], line[i+1])
 
     '''
     create_ID_name_map
@@ -134,7 +127,20 @@ class Graph:
         with open(filename, 'r') as f:
             lines = [line.rstrip().split(',') for line in f.readlines()]
         for line in lines:
-                self.name_ID_map[line[0]] = line[1]     
+                self.name_ID_map[line[0]] = line[1]
+
+    '''
+    parse_path
+    Parameters: a filename
+    Returns: None
+    Description: given a file 'filename' highlight the path within the graph
+    '''
+    def parse_path(self, filename):
+        with open(filename, 'r') as f:
+            lines = [line.rstrip().split(',') for line in f.readlines()]
+        for line in lines:
+            path = [(self.name_ID_map[line[i]], self.name_ID_map[line[i+1]]) for i in range(0, len(line)-1)]
+            self.highlight_path(path, 'r')
 
 def main():
 
@@ -142,6 +148,7 @@ def main():
 
     my_graph.create_ID_name_map("../output/actors.txt")
     my_graph.parse_file("../output/adjList.txt")
+    my_graph.parse_path("../output/path.txt")
 
     my_graph.draw()
 
