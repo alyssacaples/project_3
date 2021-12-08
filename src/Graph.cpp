@@ -153,6 +153,7 @@ std::vector<int> Graph::bfs(int from, int to) {
 }
 
 std::vector<int> Graph::dijkstra(int from, int to) {
+    
     if (from == to) return {from};
 
     std::vector<float> cost(numVertices, std::numeric_limits<float>::infinity());
@@ -189,4 +190,50 @@ std::vector<int> Graph::dijkstra(int from, int to) {
     std::reverse(path.begin(), path.end());
     return path;
     
+}
+
+std::vector<int> Graph::bellmanford(int from, int to) {
+
+    if (from == to) return {from};
+
+    std::vector<float> cost(numVertices, std::numeric_limits<float>::infinity());
+    std::vector<int> parents(numVertices, -1);
+
+    cost[V[from]] = 0;
+
+    for (int i = 0; i < V.size()-1; i++) {
+
+        for (auto iter = V.begin(); iter != V.end(); iter++) {
+
+            int curr = (*iter).second;
+            std::vector<int> adj = getAdjacent(curr);
+            auto adj_iter = adj.begin();
+            while (adj_iter != adj.end()) {
+
+                if ( cost[V[curr]] + getWeight(curr, *adj_iter) < cost[V[*adj_iter]] ) {
+
+                    cost[V[*adj_iter]] = cost[V[curr]] + getWeight(curr, *adj_iter);
+                    parents[V[*adj_iter]] = curr;
+
+                }
+
+                adj_iter++;
+
+            }
+
+        }
+
+    }
+
+    std::vector<int> path;
+    int curr = to;
+    while (curr != -1) {
+
+        path.push_back(curr);
+        curr = parents[V[curr]];
+
+    }
+    std::reverse(path.begin(), path.end());
+    return path;
+
 }

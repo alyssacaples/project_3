@@ -69,6 +69,10 @@ class Graph {
         // returns a vector<int> describing the shortest weighted
         // path from -> to. If no path exists returns {}
         std::vector<int> dijkstra(int from, int to);
+
+        // returns a vector<int> describing the shortest weighted
+        // path from -> to. If no path exists returns {}
+        std::vector<int> bellmanford(int from, int to);
         
 };
 

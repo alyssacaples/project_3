@@ -131,6 +131,10 @@ std::vector<int> ActorAnalyzer::dijkstra(int from, int to) {
     return graph.dijkstra(from, to);
 }
 
+std::vector<int> ActorAnalyzer::bellmanford(int from, int to) {
+    return graph.bellmanford(from, to);
+}
+
 std::unordered_set<int> ActorAnalyzer::kSurrondingNodes(const std::vector<int>& path, int k, int nodeLimit) {
     // need a master list to store the output
     std::unordered_set<int> masterVisited;
