@@ -72,7 +72,8 @@ class Graph {
 
         // returns a vector<int> describing the shortest weighted
         // path from -> to. If no path exists returns {}
-        std::vector<int> a_star(int from, int to);
+        std::vector<int> bellmanford(int from, int to);
+        
 };
 
 #endif /* GRAPH_H_GUARD */

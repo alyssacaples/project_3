@@ -118,17 +118,17 @@ class Graph:
         pos = nx.shell_layout(self.G)
         nx.draw(self.G, pos, edge_color=self.edge_colors, node_color=self.node_colors, with_labels=True)
         labels = nx.get_edge_attributes(self.G,'weight')
-        nx.draw_networkx_edge_labels(self.G,pos, edge_labels=labels)
+        nx.draw_networkx_edge_labels(self.G, pos, edge_labels=labels)
         plt.show()
 
     '''
     parse_file
     Parameters: a filename
     Returns: None
-    Description: given a file 'filename' create the adjacency list and display any paths
+    Description: given a file 'filename' create the adjacency list
     '''
     def parse_file(self, filename):
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             lines = [line.rstrip().split(',') for line in f.readlines()]
         for line in lines:
             for i in range(1, len(line)-1, 2):
@@ -141,10 +141,10 @@ class Graph:
     Description: given a file 'filename' create the ID->name map
     '''
     def create_ID_name_map(self, filename):
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             lines = [line.rstrip().split(',') for line in f.readlines()]
         for line in lines:
-                self.name_ID_map[line[0]] = line[1]
+            self.name_ID_map[line[0]] = line[1]
 
     '''
     parse_path
@@ -153,7 +153,7 @@ class Graph:
     Description: given a file 'filename' highlight the path within the graph
     '''
     def parse_path(self, filename):
-        with open(filename, 'r') as f:
+        with open(filename, 'r', encoding='utf-8') as f:
             lines = [line.rstrip().split(',') for line in f.readlines()]
         for line in lines:
             path = [(self.name_ID_map[line[i]], self.name_ID_map[line[i+1]]) for i in range(0, len(line)-1)]

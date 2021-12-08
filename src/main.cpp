@@ -14,7 +14,14 @@ int main() {
     << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count()
     << " ms" << std::endl;
 
+    start = std::chrono::system_clock::now();
     std::vector<int> path = AA.dijkstra(31, 2963);
+    stop = std::chrono::system_clock::now();
+    std::cout << "Time to run Dijkstra's Algorithm: "
+    << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count()
+    << " ms" << std::endl;
+
+    AA.bellmanford(31, 2963);
 
     std::unordered_set<int> nodes = AA.kSurrondingNodes(path, 1, 10);
 

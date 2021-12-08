@@ -1,6 +1,5 @@
 #include "Graph.h"
-
-
+#include <iostream>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
@@ -156,12 +155,11 @@ std::vector<int> Graph::bfs(int from, int to) {
 }
 
 std::vector<int> Graph::dijkstra(int from, int to) {
-    if (from == to) return {from};
     
-    std::vector<bool> visited(numVertices,false);
-    std::vector<int> parents(numVertices,-1);
+    if (from == to) return {from};
+    std::vector<bool> visited(numVertices, false);
+    std::vector<int> parents(numVertices, -1);
     std::vector<float> cost(numVertices, std::numeric_limits<float>::infinity());
-    bool toFound = false;
 
     // pair::first is the cost, pair::second is the vertex
     std::priority_queue<std::pair<float,int>, std::vector<std::pair<float,int>>, std::greater<std::pair<float,int>>> pq;
@@ -188,26 +186,68 @@ std::vector<int> Graph::dijkstra(int from, int to) {
             if (!visited[V[v]] && baseCost + getWeight(vertex.second, v) < cost[V[v]]) {
                 cost[V[v]] = baseCost + getWeight(vertex.second, v);
                 parents[V[v]] = vertex.second;
-                pq.push(std::make_pair(cost[V[v]], v));
-                if (v == to) {
-                    toFound = true;
-                }
-            }
-        }
-    }
-    if (!toFound) return {};
 
-    // construct the path from parents
+            }
+            
+        }
+
+    }
+
     std::vector<int> path;
-    int currVert = to;
-    while (currVert != -1) {
-        path.push_back(currVert);
-        currVert = parents[V[currVert]];
+    int curr = to;
+    while (curr != -1) {
+
+        path.push_back(curr);
+        curr = parents[V[curr]];
+
     }
     std::reverse(path.begin(), path.end());
     return path;
+    
 }
 
-std::vector<int> Graph::a_star(int from, int to) {
-    return {};
+std::vector<int> Graph::bellmanford(int from, int to) {
+
+    if (from == to) return {from};
+
+    std::vector<float> cost(numVertices, std::numeric_limits<float>::infinity());
+    std::vector<int> parents(numVertices, -1);
+
+    cost[V[from]] = 0;
+
+    for (int i = 0; i < V.size()-1; i++) {
+
+        for (auto iter = V.begin(); iter != V.end(); iter++) {
+
+            int curr = (*iter).second;
+            std::vector<int> adj = getAdjacent(curr);
+            auto adj_iter = adj.begin();
+            while (adj_iter != adj.end()) {
+
+                if ( cost[V[curr]] + getWeight(curr, *adj_iter) < cost[V[*adj_iter]] ) {
+
+                    cost[V[*adj_iter]] = cost[V[curr]] + getWeight(curr, *adj_iter);
+                    parents[V[*adj_iter]] = curr;
+
+                }
+
+                adj_iter++;
+
+            }
+
+        }
+
+    }
+
+    std::vector<int> path;
+    int curr = to;
+    while (curr != -1) {
+
+        path.push_back(curr);
+        curr = parents[V[curr]];
+
+    }
+    std::reverse(path.begin(), path.end());
+    return path;
+
 }
