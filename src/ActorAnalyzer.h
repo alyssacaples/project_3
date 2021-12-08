@@ -32,8 +32,10 @@ class ActorAnalyzer {
         std::string PrintMovies(int actorID);
         int DegreesOfSeparation(int from, int to);
         bool isConnected();
+        std::vector<int> bfs(int from, int to);
         std::vector<int> dijkstra(int from, int to);
-        std::vector<int> bellmanford(int from, int to);
+        std::vector<int> bellmanford(int from, int to); // too slow for 100k vertices
+        std::vector<int> astarsearch(int from, int to);
         std::unordered_set<int> kSurrondingNodes(const std::vector<int>& path, int k, int nodeLimit);
         std::string PrintAdjacencyList(const std::unordered_set<int>& nodes);
         std::string PrintActors(const std::unordered_set<int>& nodes);

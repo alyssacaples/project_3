@@ -68,11 +68,23 @@ class Graph {
 
         // returns a vector<int> describing the shortest weighted
         // path from -> to. If no path exists returns {}
+        // uses greedy approach and runs in O(log(V)*E) time
         std::vector<int> dijkstra(int from, int to);
 
         // returns a vector<int> describing the shortest weighted
         // path from -> to. If no path exists returns {}
+        // supports negative edge weights (not needed for our dataset)
+        // runs in O(V*E) time, which is too slow for our dataset (200k vertices)
         std::vector<int> bellmanford(int from, int to);
+
+        // returns a vector<int> describing the shortest weighted
+        // path from -> to. If no path exists returns {}
+        // uses the heuristic to prefer visiting actors that are in more movies
+        std::vector<int> astarsearch(int from, int to);
+        
+    private:
+        // calculates the heuristic as 1/numMovies
+        float h(int actor);
         
 };
 

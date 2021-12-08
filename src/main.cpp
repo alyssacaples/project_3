@@ -6,6 +6,8 @@
 #include <chrono>
 #include "ActorAnalyzer.h"
 
+void run(ActorAnalyzer& actorAnalyzer, int to, int from, int k = 1, int nodeLimit = 10);
+
 int main() {
     auto start = std::chrono::system_clock::now();
     ActorAnalyzer AA("../movies_id.csv");
@@ -14,14 +16,19 @@ int main() {
     << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count()
     << " ms" << std::endl;
 
-    start = std::chrono::system_clock::now();
-    std::vector<int> path = AA.dijkstra(31, 2963);
-    stop = std::chrono::system_clock::now();
+    run(AA, 31, 2963);
+    return 0;
+}
+
+void run(ActorAnalyzer& AA, int to, int from, int k, int nodeLimit) {
+    auto start = std::chrono::system_clock::now();
+    std::vector<int> path = AA.astarsearch(to, from);
+    auto stop = std::chrono::system_clock::now();
     std::cout << "Time to run Dijkstra's Algorithm: "
     << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count()
     << " ms" << std::endl;
 
-    AA.bellmanford(31, 2963);
+    //AA.bellmanford(to, from);
 
     std::unordered_set<int> nodes = AA.kSurrondingNodes(path, 1, 10);
 
@@ -50,5 +57,4 @@ int main() {
     else {
         std::cout << "error opening path.txt" << std::endl;
     }
-    return 0;
 }

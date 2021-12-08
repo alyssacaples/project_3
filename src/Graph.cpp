@@ -186,7 +186,7 @@ std::vector<int> Graph::dijkstra(int from, int to) {
             if (!visited[V[v]] && baseCost + getWeight(vertex.second, v) < cost[V[v]]) {
                 cost[V[v]] = baseCost + getWeight(vertex.second, v);
                 parents[V[v]] = vertex.second;
-
+                pq.push(std::make_pair(cost[V[v]], v));
             }
             
         }
@@ -215,26 +215,74 @@ std::vector<int> Graph::bellmanford(int from, int to) {
 
     cost[V[from]] = 0;
 
-    for (int i = 0; i < V.size()-1; i++) {
-
-        for (auto iter = V.begin(); iter != V.end(); iter++) {
-
-            int curr = (*iter).second;
-            std::vector<int> adj = getAdjacent(curr);
-            auto adj_iter = adj.begin();
-            while (adj_iter != adj.end()) {
-
-                if ( cost[V[curr]] + getWeight(curr, *adj_iter) < cost[V[*adj_iter]] ) {
-
-                    cost[V[*adj_iter]] = cost[V[curr]] + getWeight(curr, *adj_iter);
-                    parents[V[*adj_iter]] = curr;
-
+    for (int i = 0; i < numVertices-1; i++) {
+        for (auto& vertex : V) {
+            const int vertexIndex = vertex.second;
+            const auto& adjList = G[vertexIndex];
+            float baseCost = cost[vertexIndex];
+            for (const auto& connection : adjList) {
+                const int adjIndex = V[connection.first];
+                const float weight = connection.second;
+                if (baseCost + weight < cost[adjIndex]) {
+                    cost[adjIndex] = baseCost + weight;
+                    parents[adjIndex] = vertex.first;
                 }
-
-                adj_iter++;
-
             }
+        }
+    }
 
+    std::vector<int> path;
+    int curr = to;
+    while (curr != -1) {
+
+        path.push_back(curr);
+        curr = parents[V[curr]];
+
+    }
+    std::reverse(path.begin(), path.end());
+    return path;
+
+}
+
+std::vector<int> Graph::astarsearch(int from, int to) {
+    
+    if (from == to) return {from};
+    std::vector<bool> visited(numVertices, false);
+    std::vector<int> parents(numVertices, -1);
+    std::vector<float> cost(numVertices, std::numeric_limits<float>::infinity());
+    std::vector<float> pred(numVertices, std::numeric_limits<float>::infinity());
+
+    // pair::first is the cost, pair::second is the vertex
+    std::priority_queue<std::pair<float,int>, std::vector<std::pair<float,int>>, std::greater<std::pair<float,int>>> pq;
+
+
+    cost[V[from]] = 0;
+    pred[V[from]] = h(from);
+    pq.push(std::make_pair(pred[V[from]],from));
+
+    while(!pq.empty()) {
+        std::pair<float,int> vertex = pq.top(); pq.pop();
+        
+        // check if the cost of the vertex has been relaxed before continuing
+        if (visited[V[vertex.second]])
+            continue; // this element in the pq is "invalid", we already processed the node
+        visited[V[vertex.second]] = true;
+            
+        // early stopping condition once we process the to vertex
+        if (vertex.second == to) break;
+
+        //int baseCost = cost[V[vertex.second]];
+        float baseCost = vertex.first;
+        const std::vector<int> adj = getAdjacent(vertex.second);
+        for (const int v : adj) {
+            // "relax" every adjacent vertex v that has not been visited
+            const float potentialCost = baseCost + getWeight(vertex.second, v);
+            if (!visited[V[v]] && potentialCost < cost[V[v]]) {
+                cost[V[v]] = potentialCost;
+                pred[V[v]] = potentialCost + h(v);
+                parents[V[v]] = vertex.second;
+                pq.push(std::make_pair(pred[V[v]], v));
+            }
         }
 
     }
@@ -249,5 +297,9 @@ std::vector<int> Graph::bellmanford(int from, int to) {
     }
     std::reverse(path.begin(), path.end());
     return path;
+    
+}
 
+float Graph::h(int actor) {
+    return 1.0/getAdjacent(actor).size();
 }

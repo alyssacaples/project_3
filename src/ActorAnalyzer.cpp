@@ -127,12 +127,20 @@ bool ActorAnalyzer::isConnected() {
     return graph.isConnected();
 }
 
+std::vector<int> ActorAnalyzer::bfs(int from, int to) {
+    return graph.bfs(from, to);
+}
+
 std::vector<int> ActorAnalyzer::dijkstra(int from, int to) {
     return graph.dijkstra(from, to);
 }
 
 std::vector<int> ActorAnalyzer::bellmanford(int from, int to) {
     return graph.bellmanford(from, to);
+}
+
+std::vector<int> ActorAnalyzer::astarsearch(int from, int to) {
+    return graph.astarsearch(from, to);
 }
 
 std::unordered_set<int> ActorAnalyzer::kSurrondingNodes(const std::vector<int>& path, int k, int nodeLimit) {
