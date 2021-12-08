@@ -1,6 +1,5 @@
 #include "Graph.h"
-
-
+#include <iostream>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
@@ -155,52 +154,39 @@ std::vector<int> Graph::bfs(int from, int to) {
 
 std::vector<int> Graph::dijkstra(int from, int to) {
     if (from == to) return {from};
-    
-    std::vector<bool> visited(numVertices,false);
-    std::vector<int> parents(numVertices,-1);
-    std::vector<float> cost(numVertices, std::numeric_limits<float>::infinity());
-    bool toFound = false;
 
-    // pair::first is the cost, pair::second is the vertex
-    std::priority_queue<std::pair<int,int>, std::vector<std::pair<int,int>>, std::greater<std::pair<int,int>>> pq;
+    std::vector<float> cost(numVertices, std::numeric_limits<float>::infinity());
+    std::vector<int> parents(numVertices, -1);
+    std::priority_queue<std::pair<int,int>, std::vector<std::pair<int,int>>, std::greater<std::pair<int,int>>> nodes(V.begin(), V.end());
 
     cost[V[from]] = 0;
-    pq.push(std::make_pair(0,from));
 
-    while(!pq.empty()) {
-        std::pair<int,int> vertex = pq.top(); pq.pop();
-        // check if the cost of the vertex has been relaxed before continuing
-        if (cost[V[vertex.second]] < vertex.first) continue; // this element in the pq is "invalid"
-        visited[V[vertex.second]] = true;
-        // early stopping condition once we process the to vertex
-        if (vertex.second == to) break;
-        int baseCost = cost[V[vertex.second]];
-        const std::vector<int> adj = getAdjacent(vertex.second);
-        for (const int v : adj) {
-            // "relax" every adjacent vertex v that has not been visited
-            if (!visited[V[v]] && baseCost + getWeight(vertex.second, v) < cost[V[v]]) {
-                cost[V[v]] = baseCost + getWeight(vertex.second, v);
+    while(!nodes.empty()) {
+
+        std::pair<int,int> vertex = nodes.top(); nodes.pop();
+        std::vector<int> adj = getAdjacent(vertex.second);
+        for (int v : adj) {
+
+            if (cost[V[vertex.second]] + getWeight(vertex.second, v) < cost[V[v]]) {
+
+                cost[V[v]] = cost[V[vertex.second]] + getWeight(vertex.second, v);
                 parents[V[v]] = vertex.second;
-                pq.push(std::make_pair(cost[V[v]], v));
-                if (v == to) {
-                    toFound = true;
-                }
-            }
-        }
-    }
-    if (!toFound) return {};
 
-    // construct the path from parents
+            }
+            
+        }
+
+    }
+
     std::vector<int> path;
-    int currVert = to;
-    while (currVert != -1) {
-        path.push_back(currVert);
-        currVert = parents[V[currVert]];
+    int curr = to;
+    while (curr != -1) {
+
+        path.push_back(curr);
+        curr = parents[V[curr]];
+
     }
     std::reverse(path.begin(), path.end());
     return path;
-}
-
-std::vector<int> Graph::a_star(int from, int to) {
-    return {};
+    
 }
