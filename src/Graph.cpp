@@ -8,6 +8,8 @@
 #include <utility>
 #include <limits>
 
+#include <iostream> // debugging only
+
 Graph::Graph(const std::vector<std::vector<int>>& inTable) {
     for (const std::vector<int>& row : inTable) {
         for (const int& fromActorID : row) {
@@ -162,19 +164,24 @@ std::vector<int> Graph::dijkstra(int from, int to) {
     bool toFound = false;
 
     // pair::first is the cost, pair::second is the vertex
-    std::priority_queue<std::pair<int,int>, std::vector<std::pair<int,int>>, std::greater<std::pair<int,int>>> pq;
+    std::priority_queue<std::pair<float,int>, std::vector<std::pair<float,int>>, std::greater<std::pair<float,int>>> pq;
 
     cost[V[from]] = 0;
     pq.push(std::make_pair(0,from));
 
     while(!pq.empty()) {
-        std::pair<int,int> vertex = pq.top(); pq.pop();
+        std::pair<float,int> vertex = pq.top(); pq.pop();
+        
         // check if the cost of the vertex has been relaxed before continuing
-        if (cost[V[vertex.second]] < vertex.first) continue; // this element in the pq is "invalid"
+        if (visited[V[vertex.second]])
+            continue; // this element in the pq is "invalid", we already processed the node
         visited[V[vertex.second]] = true;
+            
         // early stopping condition once we process the to vertex
         if (vertex.second == to) break;
-        int baseCost = cost[V[vertex.second]];
+
+        //int baseCost = cost[V[vertex.second]];
+        float baseCost = vertex.first;
         const std::vector<int> adj = getAdjacent(vertex.second);
         for (const int v : adj) {
             // "relax" every adjacent vertex v that has not been visited
