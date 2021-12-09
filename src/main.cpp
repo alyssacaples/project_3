@@ -8,7 +8,7 @@
 
 void run(ActorAnalyzer& actorAnalyzer, int to, int from, int k = 1, int nodeLimit = 10);
 
-int main() {
+int main(int argc, char** argv) {
     auto start = std::chrono::system_clock::now();
     ActorAnalyzer AA("../csv_files/movies_id.csv");
     auto stop = std::chrono::system_clock::now();
@@ -16,7 +16,10 @@ int main() {
     << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count()
     << " ms" << std::endl;
 
-    run(AA, 55638, 514);
+    int actor1 = std::atoi(argv[1]);
+    int actor2 = std::atoi(argv[2]);
+
+    run(AA, actor1, actor2);
     return 0;
 }
 
