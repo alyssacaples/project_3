@@ -167,7 +167,7 @@ def main():
 
     my_graph.create_ID_name_map("../output/actors.txt")
     my_graph.parse_file("../output/adjList.txt")
-    my_graph.parse_path("../output/path.txt")
+    my_graph.parse_path("../output/dijkstra.txt")
 
     my_graph.draw()
 

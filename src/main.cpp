@@ -16,25 +16,31 @@ int main() {
     << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count()
     << " ms" << std::endl;
 
-    run(AA, 31, 2963);
+    run(AA, 1023139, 64796);
     return 0;
 }
 
 void run(ActorAnalyzer& AA, int to, int from, int k, int nodeLimit) {
     auto start = std::chrono::system_clock::now();
-    std::vector<int> path = AA.astarsearch(to, from);
+    std::vector<int> dijkstraPath = AA.dijkstra(to, from);
     auto stop = std::chrono::system_clock::now();
     std::cout << "Time to run Dijkstra's Algorithm: "
     << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count()
     << " ms" << std::endl;
 
-    //AA.bellmanford(to, from);
+    start = std::chrono::system_clock::now();
+    std::vector<int> astarPath = AA.astarsearch(to, from);
+    stop = std::chrono::system_clock::now();
+    std::cout << "Time to run A* Search Algorithm: "
+    << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count()
+    << " ms" << std::endl;
 
-    std::unordered_set<int> nodes = AA.kSurrondingNodes(path, 1, 10);
+    std::unordered_set<int> nodes = AA.kSurrondingNodes(dijkstraPath, 1, 2);
 
     std::ofstream adjList("../output/adjList.txt");
     std::ofstream actors("../output/actors.txt");
-    std::ofstream pathFile("../output/path.txt");
+    std::ofstream dijkstraFile("../output/dijkstra.txt");
+    std::ofstream astarFile("../output/astar.txt");
 
     if (adjList.is_open()) {
         adjList << AA.PrintAdjacencyList(nodes);
@@ -50,11 +56,23 @@ void run(ActorAnalyzer& AA, int to, int from, int k, int nodeLimit) {
         std::cout << "error opening actors.txt" << std::endl;
     }
 
-    if (pathFile.is_open()) {
-        pathFile << AA.PrintPath(path);
-        pathFile.close();
+    if (dijkstraFile.is_open()) {
+        dijkstraFile << AA.PrintPath(dijkstraPath);
+        dijkstraFile.close();
     }
     else {
-        std::cout << "error opening path.txt" << std::endl;
+        std::cout << "error opening dijkstra.txt" << std::endl;
+    }
+
+    if (astarFile.is_open()) {
+
+        astarFile << AA.PrintPath(astarPath);
+        astarFile.close();
+
+    }
+    else {
+
+        std::cout << "error opening astar.txt" << std::endl;
+
     }
 }
