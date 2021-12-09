@@ -1,6 +1,6 @@
-/credits.csv
-/movies_metadata.csv
-/movies_id.csv
+/csv_files/credits.csv
+/csv_files/movies_metadata.csv
+/csv_files/movies_id.csv
 /src/main.exe
 /src/ActorAnalyzer.exe
 /src/Graph.exe

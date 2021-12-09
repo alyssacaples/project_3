@@ -10,13 +10,13 @@ void run(ActorAnalyzer& actorAnalyzer, int to, int from, int k = 1, int nodeLimi
 
 int main() {
     auto start = std::chrono::system_clock::now();
-    ActorAnalyzer AA("../movies_id.csv");
+    ActorAnalyzer AA("../csv_files/movies_id.csv");
     auto stop = std::chrono::system_clock::now();
     std::cout << "Time to construct ActorAnalyzer: "
     << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count()
     << " ms" << std::endl;
 
-    run(AA, 1023139, 64796);
+    run(AA, 55638, 514);
     return 0;
 }
 
@@ -35,7 +35,7 @@ void run(ActorAnalyzer& AA, int to, int from, int k, int nodeLimit) {
     << std::chrono::duration_cast<std::chrono::milliseconds>(stop-start).count()
     << " ms" << std::endl;
 
-    std::unordered_set<int> nodes = AA.kSurrondingNodes(dijkstraPath, 1, 2);
+    std::unordered_set<int> nodes = AA.kSurrondingNodes(dijkstraPath, 1, 1);
 
     std::ofstream adjList("../output/adjList.txt");
     std::ofstream actors("../output/actors.txt");
